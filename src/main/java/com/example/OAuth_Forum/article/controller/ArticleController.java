@@ -48,7 +48,7 @@ public class ArticleController {
     }
 
     @PutMapping("/update")
-    public String updateTask(@RequestBody RequestArticle.UpdateArticleDto requestDto) {
+    public String updateArticle(@RequestBody RequestArticle.UpdateArticleDto requestDto) {
         articleService.updateArticle(requestDto);
 //        ResponseMessage responseMessage = ResponseMessage.builder()
 //                .message("Task updated successfully.")
@@ -57,7 +57,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteTask(@PathVariable("id") Long id) {
+    public String deleteArticle(@PathVariable("id") Long id) {
         articleService.deleteArticle(id);
 //        ResponseMessage responseMessage = ResponseMessage.builder()
 //                .message("Task deleted successfully.")

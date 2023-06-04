@@ -1,7 +1,11 @@
 package com.example.OAuth_Forum.article.entity;
 
 import com.example.OAuth_Forum.comment.entity.Comment;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,13 +22,21 @@ public class Article {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "fix_date")
     private LocalDateTime fixedDate = LocalDateTime.now();
 
+    @CreationTimestamp
+    @Column(name = "creation_date")
     private LocalDateTime creationDate = LocalDateTime.now();
 
+    @Column(name = "title")
     private String title;
 
+    @Column(name = "content")
     private String content;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
 
 //    private String imgUrl;
 
@@ -39,12 +51,7 @@ public class Article {
         this.content = content;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
+    public void addComments(Comment comment){
+        this.commentList.add(comment);
     }
-
-    public void setFixeDate(LocalDateTime fixedDate) {
-        this.fixedDate = fixedDate;
-    }
-
 }

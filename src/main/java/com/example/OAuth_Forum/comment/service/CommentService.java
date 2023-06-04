@@ -10,7 +10,7 @@ import com.example.OAuth_Forum.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,17 +22,16 @@ public class CommentService {
     private final ArticleRepository articleRepository;
 
     public void saveComment(RequestComment.SaveCommentDto saveCommentDto) {
-        Comment comment = RequestComment.SaveCommentDto.toEntity(saveCommentDto);
-        commentRepository.save(comment);
 
-        // 게시글의 시간을 댓글 등록 시간으로 변경
-        Article article = articleRepository.findById(saveCommentDto.getArticleId()).orElse(null);
-        if (article != null) {
-            article.setFixedDate(LocalDateTime.now());
-            articleRepository.save(article);
+        Article article = articleRepository.findById(saveCommentDto.getArticleId()).get();
+        if (article == null){
+            throw new EntityNotFoundException();
         }
+        Comment comment = RequestComment.SaveCommentDto.toEntity(saveCommentDto, article);
+        commentRepository.save(comment);
+        article.addComments(comment);
+        articleRepository.save(article);
     }
-
 
     public List<ResponseComment.GetAllCommentDto> getAllComment() {
         List<Comment> tasks = commentRepository.findAll();
@@ -47,7 +46,7 @@ public class CommentService {
         return ResponseComment.GetCommentDto.toDto(comment);
     }
 
-    public List<ResponseComment.articleIdCommentDto> articleIdComment(Long articleId){
+    public List<ResponseComment.articleIdCommentDto> getByAId(Long articleId){
 
         List<Comment> comments = commentRepository.findAllByArticleId(articleId);
         List<ResponseComment.articleIdCommentDto> dtoList = new ArrayList<>();

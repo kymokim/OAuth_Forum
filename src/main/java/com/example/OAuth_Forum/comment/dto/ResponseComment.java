@@ -24,7 +24,7 @@ public class ResponseComment {
                     .creationDate(comment.getCreationDate())
                     .commentWriter(comment.getCommentWriter())
                     .commentContents(comment.getCommentContents())
-                    .articleId(comment.getArticleId())
+                    .articleId(comment.getArticle().getId())
                     .build();
         }
     }
@@ -44,7 +44,7 @@ public class ResponseComment {
                     .creationDate(comment.getCreationDate())
                     .commentWriter(comment.getCommentWriter())
                     .commentContents(comment.getCommentContents())
-                    .articleId(comment.getArticleId())
+                    .articleId(comment.getArticle().getId())
                     .build();
         }
 
