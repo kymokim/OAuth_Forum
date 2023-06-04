@@ -1,12 +1,12 @@
 package com.example.OAuth_Forum.article.entity;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.example.OAuth_Forum.comment.entity.Comment;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "article")
 @Entity
@@ -17,6 +17,8 @@ public class Article {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
+
+    private LocalDateTime fixedDate = LocalDateTime.now();
 
     private LocalDateTime creationDate = LocalDateTime.now();
 
@@ -36,4 +38,13 @@ public class Article {
         this.title = title;
         this.content = content;
     }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setFixeDate(LocalDateTime fixedDate) {
+        this.fixedDate = fixedDate;
+    }
+
 }

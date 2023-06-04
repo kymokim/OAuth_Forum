@@ -53,6 +53,7 @@ public class ArticleService { // 오류 던지긴 하는데 안 날라옴
         Article article = articleRepository.findById(id).get();
         articleRepository.delete(article);
     }
+}
 
     //    public String uploadImg(MultipartFile file, long taskId){
 //        Task article = taskRepository.findById(taskId).get();
@@ -72,4 +73,3 @@ public class ArticleService { // 오류 던지긴 하는데 안 날라옴
 //        taskRepository.save(article);
 //        return url;
 //    }
-}

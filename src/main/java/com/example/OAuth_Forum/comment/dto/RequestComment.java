@@ -14,6 +14,7 @@ public class RequestComment {
 
         private String commentWriter;
         private String commentContents;
+        private LocalDateTime creationDate;
         private Long articleId;
 
         public static Comment toEntity(SaveCommentDto saveCommentDto) {
@@ -23,6 +24,7 @@ public class RequestComment {
                     .articleId(saveCommentDto.getArticleId())
                     .build();
         }
+
     }
 
     @Data
@@ -31,6 +33,7 @@ public class RequestComment {
         private Long id;
         private String commentWriter;
         private String commentContents;
+        private LocalDateTime creationDate;
         private Long articleId;
 
         public static Comment toEntity(Comment comment, UpdateCommentDto updateCommentDto) {

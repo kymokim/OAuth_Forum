@@ -23,6 +23,8 @@ public class Comment {
 
     private String commentWriter;
 
+    private LocalDateTime fixedDate = LocalDateTime.now();
+
     private LocalDateTime creationDate = LocalDateTime.now();
 
     private String commentContents;
