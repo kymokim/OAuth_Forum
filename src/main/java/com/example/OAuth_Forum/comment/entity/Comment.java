@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,25 +20,29 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long articleId;
-
-    private String commentWriter;
-
+    @CreationTimestamp
+    @Column(name = "creation_date")
     private LocalDateTime creationDate = LocalDateTime.now();
 
+    @Column(name = "writer")
+    private String commentWriter;
+    @Column(name = "content")
     private String commentContents;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id", nullable = false)
+    private Article article;
+
     @Builder
-    public Comment(String commentWriter, String commentContents, Long articleId){ // 얜 왜 필요함??
+    public Comment(String commentWriter, String commentContents, Article article){ // 얜 왜 필요함??
         this.commentWriter = commentWriter;
         this.commentContents = commentContents;
-        this.articleId = articleId;
+        this.article = article;
     }
 
-    public void update(String commentWriter, String commentContents, Long articleId){
+    public void update(String commentWriter, String commentContents){
         this.commentWriter = commentWriter;
         this.commentContents = commentContents;
-        this.articleId = articleId;
     }
 
 }

@@ -10,6 +10,7 @@ import com.example.OAuth_Forum.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +23,14 @@ public class CommentService {
 
     public void saveComment(RequestComment.SaveCommentDto saveCommentDto) {
 
-        Comment comment = RequestComment.SaveCommentDto.toEntity(saveCommentDto);
+        Article article = articleRepository.findById(saveCommentDto.getArticleId()).get();
+        if (article == null){
+            throw new EntityNotFoundException();
+        }
+        Comment comment = RequestComment.SaveCommentDto.toEntity(saveCommentDto, article);
         commentRepository.save(comment);
+        article.addComments(comment);
+        articleRepository.save(article);
     }
 
     public List<ResponseComment.GetAllCommentDto> getAllComment() {
@@ -39,7 +46,7 @@ public class CommentService {
         return ResponseComment.GetCommentDto.toDto(comment);
     }
 
-    public List<ResponseComment.articleIdCommentDto> articleIdComment(Long articleId){
+    public List<ResponseComment.articleIdCommentDto> getByAId(Long articleId){
 
         List<Comment> comments = commentRepository.findAllByArticleId(articleId);
         List<ResponseComment.articleIdCommentDto> dtoList = new ArrayList<>();

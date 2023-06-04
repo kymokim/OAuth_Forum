@@ -1,5 +1,6 @@
 package com.example.OAuth_Forum.comment.dto;
 
+import com.example.OAuth_Forum.article.entity.Article;
 import com.example.OAuth_Forum.comment.entity.Comment;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +17,11 @@ public class RequestComment {
         private String commentContents;
         private Long articleId;
 
-        public static Comment toEntity(SaveCommentDto saveCommentDto) {
+        public static Comment toEntity(SaveCommentDto saveCommentDto, Article article) {
             return Comment.builder()
                     .commentWriter(saveCommentDto.getCommentWriter())
                     .commentContents(saveCommentDto.getCommentContents())
-                    .articleId(saveCommentDto.getArticleId())
+                    .article(article)
                     .build();
         }
     }
@@ -31,13 +32,11 @@ public class RequestComment {
         private Long id;
         private String commentWriter;
         private String commentContents;
-        private Long articleId;
 
         public static Comment toEntity(Comment comment, UpdateCommentDto updateCommentDto) {
             comment.update(
                       updateCommentDto.getCommentWriter()
                     , updateCommentDto.getCommentContents()
-                    , updateCommentDto.getArticleId()
             );
             return comment;
         }

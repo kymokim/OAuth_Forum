@@ -20,38 +20,38 @@ public class CommentController {
     @Autowired
     private final CommentService commentService;
 
-    @PostMapping("/save")
-    public String saveComment(@RequestBody RequestComment.SaveCommentDto commentDto) {
+    @PostMapping("/create")
+    public String createComment(@RequestBody RequestComment.SaveCommentDto commentDto) {
         commentService.saveComment(commentDto);
         return "Comment created successfully";
     }
 
-    @GetMapping("/getM")
+    @GetMapping("/get")
     public List<ResponseComment.GetAllCommentDto> getAllComment() {
         List<ResponseComment.GetAllCommentDto> response = commentService.getAllComment();
         return response;
     }
 
-    @GetMapping("/getM/{id}")
+    @GetMapping("/get/{id}")
     public ResponseComment.GetCommentDto getComment(@PathVariable("id") Long id) {
         ResponseComment.GetCommentDto response = commentService.getComment(id);
         return response;
     }
 
-    @GetMapping("/getMA/{articleId}")
-    public List<ResponseComment.articleIdCommentDto> articleIdComment(@PathVariable("articleId") Long articleId) {
-        List<ResponseComment.articleIdCommentDto> response = commentService.articleIdComment(articleId);
+    @GetMapping("/getByAId/{articleId}")
+    public List<ResponseComment.articleIdCommentDto> getByArticleId(@PathVariable("articleId") Long articleId) {
+        List<ResponseComment.articleIdCommentDto> response = commentService.getByAId(articleId);
         return response;
     }
 
 
-    @PutMapping("/updateM")
+    @PutMapping("/update")
     public String updateComment(@RequestBody RequestComment.UpdateCommentDto commentDto){
         commentService.updateComment(commentDto);
         return "Comment updated successfully.";
     }
 
-    @DeleteMapping("/deleteM/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteComment(@PathVariable("id") Long id) {
         commentService.deleteComment(id);
         return "Comment delete successfully.";
