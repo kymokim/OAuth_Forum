@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,9 @@ public class CommentService {
         Comment comment = RequestComment.SaveCommentDto.toEntity(saveCommentDto, article);
         commentRepository.save(comment);
         article.addComments(comment);
+
+        // 게시글의 시간을 댓글 수정 시간으로 변경
+        article.setFixedDate(LocalDateTime.now());
         articleRepository.save(article);
     }
 
@@ -59,6 +63,10 @@ public class CommentService {
         Comment originalComment = commentRepository.findById(updateCommentDto.getId()).get();
         Comment updatedComment = RequestComment.UpdateCommentDto.toEntity(originalComment, updateCommentDto);
         commentRepository.save(updatedComment);
+
+        Article article = articleRepository.findById(updatedComment.getArticle().getId()).get();
+        article.setFixedDate(LocalDateTime.now());
+        articleRepository.save(article);
     }
 
     public void deleteComment(Long id) {

@@ -16,6 +16,7 @@ public class ResponseArticle {
     public static class GetArticleDto {
         private Long id;
         private LocalDateTime creationDate;
+        private LocalDateTime fixedDate;
         private String title;
         private String content;
         private List<CommentListDto> commentList;
@@ -23,11 +24,11 @@ public class ResponseArticle {
         public static GetArticleDto toDto(Article article){
             List<CommentListDto> commentList = new ArrayList<>();
             if (!article.getCommentList().isEmpty())
-//                commentList.addAll(article.getCommentList());
                 article.getCommentList().stream().forEach(comment -> commentList.add(CommentListDto.toDto(comment)));
             return GetArticleDto.builder()
                     .id(article.getId())
                     .creationDate(article.getCreationDate())
+                    .fixedDate(article.getFixedDate())
                     .title(article.getTitle())
                     .content(article.getContent())
                     .commentList(commentList)
