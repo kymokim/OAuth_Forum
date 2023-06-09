@@ -32,8 +32,13 @@ public class Article {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "writer")
+    private String writer;
     @Column(name = "content")
     private String content;
+
+    @Column(name = "img_url")
+    private String imgUrl;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
@@ -41,9 +46,10 @@ public class Article {
 //    private String imgUrl;
 
     @Builder
-    public Article(String title, String content){ // 얜 왜 필요함??
+    public Article(String title, String content, String writer){ // 빌더 사용에 필요
         this.title = title;
         this.content = content;
+        this.writer = writer;
     }
 
     public void update(String title, String content){

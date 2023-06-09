@@ -19,6 +19,8 @@ public class ResponseArticle {
         private LocalDateTime fixedDate;
         private String title;
         private String content;
+        private String imgUrl;
+        private String writer;
         private List<CommentListDto> commentList;
 
         public static GetArticleDto toDto(Article article){
@@ -31,6 +33,8 @@ public class ResponseArticle {
                     .fixedDate(article.getFixedDate())
                     .title(article.getTitle())
                     .content(article.getContent())
+                    .imgUrl(article.getImgUrl())
+                    .writer(article.getWriter())
                     .commentList(commentList)
                     .build();
         }

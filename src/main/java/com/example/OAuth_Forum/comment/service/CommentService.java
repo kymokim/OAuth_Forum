@@ -3,6 +3,9 @@ package com.example.OAuth_Forum.comment.service;
 import com.example.OAuth_Forum.article.dto.ResponseArticle;
 import com.example.OAuth_Forum.article.entity.Article;
 import com.example.OAuth_Forum.article.repository.ArticleRepository;
+import com.example.OAuth_Forum.auth.repository.AuthRepository;
+import com.example.OAuth_Forum.auth.security.JwtAuthToken;
+import com.example.OAuth_Forum.auth.security.JwtAuthTokenProvider;
 import com.example.OAuth_Forum.comment.dto.RequestComment;
 import com.example.OAuth_Forum.comment.dto.ResponseComment;
 import com.example.OAuth_Forum.comment.entity.Comment;
@@ -14,21 +17,30 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
+    private final JwtAuthTokenProvider jwtAuthTokenProvider;
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
+    private final AuthRepository authRepository;
 
-    public void saveComment(RequestComment.SaveCommentDto saveCommentDto) {
+    public void saveComment(RequestComment.SaveCommentDto saveCommentDto, Optional<String> token) {
 
+        String email = null;
+        if (token.isPresent()) {
+            JwtAuthToken jwtAuthToken = jwtAuthTokenProvider.convertAuthToken(token.get());
+            email = jwtAuthToken.getClaims().getSubject();
+        }
+        String writer = authRepository.findByEmail(email).getUsername();
         Article article = articleRepository.findById(saveCommentDto.getArticleId()).get();
         if (article == null){
             throw new EntityNotFoundException();
         }
-        Comment comment = RequestComment.SaveCommentDto.toEntity(saveCommentDto, article);
+        Comment comment = RequestComment.SaveCommentDto.toEntity(saveCommentDto, article, writer);
         commentRepository.save(comment);
         article.addComments(comment);
 
@@ -58,20 +70,38 @@ public class CommentService {
         return dtoList;
     }
 
-    public void updateComment(RequestComment.UpdateCommentDto updateCommentDto) {
+    public void updateComment(RequestComment.UpdateCommentDto updateCommentDto, Optional<String> token) {
+
+        String email = null;
+        if (token.isPresent()) {
+            JwtAuthToken jwtAuthToken = jwtAuthTokenProvider.convertAuthToken(token.get());
+            email = jwtAuthToken.getClaims().getSubject();
+        }
+        String writer = authRepository.findByEmail(email).getUsername();
 
         Comment originalComment = commentRepository.findById(updateCommentDto.getId()).get();
-        Comment updatedComment = RequestComment.UpdateCommentDto.toEntity(originalComment, updateCommentDto);
-        commentRepository.save(updatedComment);
-
-        Article article = articleRepository.findById(updatedComment.getArticle().getId()).get();
-        article.setFixedDate(LocalDateTime.now());
-        articleRepository.save(article);
+        if (originalComment.getCommentWriter().equals(writer)) {
+            Comment updatedComment = RequestComment.UpdateCommentDto.toEntity(originalComment, updateCommentDto);
+            commentRepository.save(updatedComment);
+            Article article = articleRepository.findById(updatedComment.getArticle().getId()).get();
+            article.setFixedDate(LocalDateTime.now());
+            articleRepository.save(article);
+        }
+        else throw new RuntimeException();
     }
 
-    public void deleteComment(Long id) {
+    public void deleteComment(Long id, Optional<String> token) {
+
+        String email = null;
+        if (token.isPresent()) {
+            JwtAuthToken jwtAuthToken = jwtAuthTokenProvider.convertAuthToken(token.get());
+            email = jwtAuthToken.getClaims().getSubject();
+        }
+        String writer = authRepository.findByEmail(email).getUsername();
         Comment comment = commentRepository.findById(id).get();
-        commentRepository.delete(comment);
+        if (comment.getCommentWriter().equals(writer)) {
+            commentRepository.delete(comment);
+        }
     }
 
 }

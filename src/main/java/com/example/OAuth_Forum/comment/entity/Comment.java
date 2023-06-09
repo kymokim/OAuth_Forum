@@ -40,8 +40,7 @@ public class Comment {
         this.article = article;
     }
 
-    public void update(String commentWriter, String commentContents){
-        this.commentWriter = commentWriter;
+    public void update(String commentContents){
         this.commentContents = commentContents;
     }
 

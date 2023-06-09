@@ -13,13 +13,12 @@ public class RequestComment {
     @Builder
     public static class SaveCommentDto {
 
-        private String commentWriter;
         private String commentContents;
         private Long articleId;
 
-        public static Comment toEntity(SaveCommentDto saveCommentDto, Article article) {
+        public static Comment toEntity(SaveCommentDto saveCommentDto, Article article, String writer) {
             return Comment.builder()
-                    .commentWriter(saveCommentDto.getCommentWriter())
+                    .commentWriter(writer)
                     .commentContents(saveCommentDto.getCommentContents())
                     .article(article)
                     .build();
@@ -30,14 +29,10 @@ public class RequestComment {
     @Builder
     public static class UpdateCommentDto{
         private Long id;
-        private String commentWriter;
         private String commentContents;
 
         public static Comment toEntity(Comment comment, UpdateCommentDto updateCommentDto) {
-            comment.update(
-                      updateCommentDto.getCommentWriter()
-                    , updateCommentDto.getCommentContents()
-            );
+            comment.update(updateCommentDto.getCommentContents());
             return comment;
         }
     }

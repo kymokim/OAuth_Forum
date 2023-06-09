@@ -15,10 +15,11 @@ public class RequestArticle { // NotNull 적긴 했는데 오류가 안 날라�
 //        @NotEmpty(message = "No content entered.")
         private String content;
 
-        public static Article toEntity(CreateArticleDto createArticleDto){
+        public static Article toEntity(CreateArticleDto createArticleDto, String writer){
             return Article.builder()
                     .title(createArticleDto.getTitle())
                     .content(createArticleDto.getContent())
+                    .writer(writer)
                     .build();
         }
     }
@@ -41,10 +42,10 @@ public class RequestArticle { // NotNull 적긴 했는데 오류가 안 날라�
     }
 
 
-    //    @Data
-//    @Builder
-//    public static class UploadImgDto{
-//        private Long taskId;
-//        private Long usrId;
-//    }
+    @Data
+    @Builder
+    public static class UploadImgDto{
+        private Long articleId;
+        private Long usrId;
+    }
 }
